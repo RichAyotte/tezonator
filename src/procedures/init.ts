@@ -12,6 +12,7 @@ const init_client: Procedure<ProcedureOptions> = {
 			procedure_options: options,
 			type: 'client',
 		})
+
 		const bin_dir = path.join(
 			options.user_paths.bin,
 			options.tezos_network.git_ref,
@@ -39,19 +40,22 @@ const init_node: Procedure<ProcedureOptions> = {
 			procedure_options: options,
 			type: 'node',
 		})
+
 		const bin_dir = path.join(
 			options.user_paths.bin,
 			options.tezos_network.git_ref,
 		)
+
+		const network =
+			options.tezos_network.network_url ??
+			options.tezos_network.human_name.toLowerCase()
 
 		await mkdir(node_data_dir, { recursive: true })
 
 		const output = await $`${path.join(
 			bin_dir,
 			'octez-node',
-		)} config init --network ${
-			options.tezos_network.network_url
-		} --data-dir ${node_data_dir}`.quiet()
+		)} config init --network ${network} --data-dir ${node_data_dir}`.quiet()
 
 		if (output.exitCode !== 0) {
 			throw new Error(output.stderr.toString())
