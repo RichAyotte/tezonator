@@ -12,7 +12,7 @@ export function get_config_dir({
 }: GetConfigDirInput): string {
 	return path.join(
 		procedure_options.user_paths.data,
-		'networks',
+		'config',
 		procedure_options.tezos_network.human_name.toLowerCase(),
 		type,
 	)
