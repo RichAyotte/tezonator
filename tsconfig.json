@@ -1,0 +1,26 @@
+{
+  "compilerOptions": {
+    "lib": [
+      "ESNext"
+    ],
+    "module": "ESNext",
+    "moduleDetection": "force",
+    "moduleResolution": "Bundler",
+    "outDir": "dist",
+    "paths": {
+      "~/*": [
+        "./src/*"
+      ]
+    },
+    "removeComments": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "target": "ESNext"
+  },
+  "include": [
+    "types.d.ts",
+    "reset.d.ts",
+    "src/**/*.ts",
+    "dist/**/*.d.ts"
+  ]
+}

@@ -1,0 +1,31 @@
+// Bun Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`get_binary_version (Octez 0.0+dev) 1`] = `
+{
+  "bin_path": {
+    "base": "octez-client",
+    "dir": "/home/rich/.local/bin/tezonator/0a81ce76",
+    "ext": "",
+    "name": "octez-client",
+    "root": "/",
+  },
+  "commit_hash": "0a81ce76",
+  "date": 2024-03-19T17:09:20.000Z,
+  "version": "Octez 0.0+dev",
+}
+`;
+
+exports[`get_binary_version (18.0~rc1+dev) 1`] = `
+{
+  "bin_path": {
+    "base": "octez-client",
+    "dir": "/home/rich/.local/bin/tezonator/0a81ce76",
+    "ext": "",
+    "name": "octez-client",
+    "root": "/",
+  },
+  "commit_hash": "cae5b795",
+  "date": 2024-02-29T10:34:23.000Z,
+  "version": "18.0~rc1+dev",
+}
+`;

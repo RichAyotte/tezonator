@@ -1,0 +1,30 @@
+export const octez_binaries = [
+	'octez-accuser-alpha',
+	'octez-accuser-Proxford',
+	'octez-accuser-PtNairob',
+	'octez-accuser-PtParisA',
+	'octez-admin-client',
+	'octez-baker-alpha',
+	'octez-baker-Proxford',
+	'octez-baker-PtNairob',
+	'octez-baker-PtParisA',
+	'octez-client',
+	'octez-codec',
+	'octez-dac-client',
+	'octez-dac-node',
+	'octez-dal-node',
+	'octez-evm-node',
+	'octez-node',
+	'octez-protocol-compiler',
+	'octez-proxy-server',
+	'octez-signer',
+	'octez-smart-rollup-client-alpha',
+	'octez-smart-rollup-client-Proxford',
+	'octez-smart-rollup-client-PtNairob',
+	'octez-smart-rollup-node',
+	'octez-smart-rollup-wasm-debugger',
+	'octez-snoop',
+] as const
+
+export type OctezBinaries = typeof octez_binaries
+export type OctezBinary = OctezBinaries[number]

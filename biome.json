@@ -1,0 +1,77 @@
+{
+	"$schema": "https://biomejs.dev/schemas/1.5.3/schema.json",
+	"files": {
+		"include": [
+			"*.ts"
+		]
+	},
+	"formatter": {
+		"enabled": true,
+		"formatWithErrors": true,
+		"indentStyle": "tab",
+		"indentWidth": 2,
+		"lineEnding": "lf",
+		"lineWidth": 100
+	},
+	"javascript": {
+		"formatter": {
+			"arrowParentheses": "asNeeded",
+			"quoteStyle": "single",
+			"semicolons": "asNeeded",
+			"lineWidth": 80
+		},
+		"parser": {
+			"unsafeParameterDecoratorsEnabled": true
+		}
+	},
+	"linter": {
+		"enabled": true,
+		"rules": {
+			"complexity": {
+				"noExcessiveCognitiveComplexity": "warn",
+				"noVoid": "error",
+				"useSimplifiedLogicExpression": "warn"
+			},
+			"correctness": {
+				"noNewSymbol": "error",
+				"noUndeclaredVariables": "error",
+				"useHookAtTopLevel": "error"
+			},
+			"nursery": {
+				"all": true,
+				"noConsole": "off",
+				"noNodejsModules": "off",
+				"noUndeclaredDependencies": "off"
+			},
+			"recommended": true,
+			"style": {
+				"useFilenamingConvention": {
+					"level": "error",
+					"options": {
+						"filenameCases": [
+							"snake_case"
+						],
+						"strictCase": true
+					}
+				},
+				"noDefaultExport": "error",
+				"noImplicitBoolean": "error",
+				"noNamespace": "error",
+				"noNegationElse": "error",
+				"noShoutyConstants": "error",
+				"useBlockStatements": "error",
+				"useCollapsedElseIf": "error",
+				"useFragmentSyntax": "error",
+				"useNamingConvention": "off",
+				"useShorthandArrayType": "error",
+				"useShorthandAssign": "error"
+			},
+			"suspicious": {
+				"noApproximativeNumericConstant": "error",
+				"noConsoleLog": "off",
+				"noControlCharactersInRegex": "error",
+				"noMisrefactoredShorthandAssign": "error"
+			}
+		}
+	}
+}

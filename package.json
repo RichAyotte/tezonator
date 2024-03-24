@@ -1,0 +1,40 @@
+{
+  "author": "Richard Ayotte",
+  "dependencies": {
+    "ajv": "^8.12.0",
+    "ajv-formats": "^2.1.1",
+    "ora": "^8.0.1"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "1.6.2",
+    "@total-typescript/ts-reset": "^0.5.1",
+    "@types/ajv": "^1.0.0",
+    "@types/bun": "latest",
+    "json-schema-to-ts": "^3.0.1",
+    "tsc-alias": "^1.8.8"
+  },
+  "engines": {
+    "bun": ">=1.0.33"
+  },
+  "exports": {
+    ".": {
+      "import": "./dist/index.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "module": "index.ts",
+  "name": "tezonator",
+  "peerDependencies": {
+    "typescript": "beta"
+  },
+  "scripts": {
+    "format": "biome format --write ./src; biome check --apply ./src",
+    "lint": "biome check --apply ./src",
+    "tc": "tsc --noEmit",
+    "compile": "bun build ./src/tezonator.ts --compile --outfile tezonator"
+  },
+  "type": "module",
+  "version": "0.0.1"
+}
