@@ -3,11 +3,15 @@ import path from 'node:path'
 import { $ } from 'bun'
 import type { Procedure } from '~/procedures/types'
 import type { ProcedureOptions } from '~/tezonator'
+import { get_config_dir } from '~/transformers/get_config_dir'
 
 const init_client: Procedure<ProcedureOptions> = {
 	id: Symbol('init octez client'),
 	run: async options => {
-		const client_data_dir = path.join(options.user_paths.data, 'client')
+		const client_data_dir = get_config_dir({
+			procedure_options: options,
+			type: 'client',
+		})
 		const bin_dir = path.join(
 			options.user_paths.bin,
 			options.tezos_network.git_ref,
@@ -31,7 +35,10 @@ const init_client: Procedure<ProcedureOptions> = {
 const init_node: Procedure<ProcedureOptions> = {
 	id: Symbol('init octez node'),
 	run: async options => {
-		const node_data_dir = path.join(options.user_paths.data, 'node')
+		const node_data_dir = get_config_dir({
+			procedure_options: options,
+			type: 'node',
+		})
 		const bin_dir = path.join(
 			options.user_paths.bin,
 			options.tezos_network.git_ref,
