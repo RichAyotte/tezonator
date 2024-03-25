@@ -63,7 +63,34 @@ const init_node: Procedure<ProcedureOptions> = {
 	},
 }
 
+const generate_identity: Procedure<ProcedureOptions> = {
+	id: Symbol('generate identity'),
+	run: async options => {
+		const node_data_dir = get_config_dir({
+			procedure_options: options,
+			type: 'node',
+		})
+
+		const bin_dir = path.join(
+			options.user_paths.bin,
+			options.tezos_network.git_ref,
+		)
+
+		const config_file = path.join(node_data_dir, 'config.json')
+
+		const output = await $`${path.join(
+			bin_dir,
+			'octez-node',
+		)} identity generate --config-file ${config_file}`.quiet()
+
+		if (output.exitCode !== 0) {
+			throw new Error(output.stderr.toString())
+		}
+	},
+	dependencies: [init_node],
+}
+
 export const init_procedures: Procedure<ProcedureOptions>[] = [
 	init_client,
-	init_node,
+	generate_identity,
 ]
