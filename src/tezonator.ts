@@ -13,8 +13,6 @@ import {
 import { is_item_in_set } from '~/flow/is_item_in_set'
 import { run_procedures } from '~/flow/run_procedures'
 import type { TezosNetwork } from '~/flow/validators/tezos_networks'
-import { validate_tezos_networks } from '~/flow/validators/tezos_networks'
-import { validate_tezos_network } from '~/flow/validators/tezos_networks'
 import type { UserPaths } from '~/procedures/create_user_paths'
 import { create_user_paths } from '~/procedures/create_user_paths'
 import { get_tezos_network } from '~/transformers/get_tezos_network'
