@@ -1,0 +1,13 @@
+[Unit]
+Description = Octez Node
+Documentation = https://tezos.gitlab.io/user/setup-node.html
+
+[Service]
+ExecStart =
+Restart = on-failure
+RestartSec = 60
+TimeoutStopSec = 15min
+
+[Install]
+RequiredBy =
+WantedBy = default.target

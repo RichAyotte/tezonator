@@ -1,12 +1,13 @@
 {
   "author": "Richard Ayotte",
   "dependencies": {
+    "@richayotte/ini": "^4.1.7",
     "ajv": "^8.12.0",
     "ajv-formats": "^2.1.1",
     "ora": "^8.0.1"
   },
   "devDependencies": {
-    "@biomejs/biome": "1.6.2",
+    "@biomejs/biome": "1.6.3",
     "@total-typescript/ts-reset": "^0.5.1",
     "@types/ajv": "^1.0.0",
     "@types/bun": "latest",
