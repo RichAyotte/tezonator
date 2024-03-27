@@ -22,10 +22,16 @@ export type ProcedureOptions = {
 	repo_dir: string
 	tezos_network: TezosNetwork
 	user_paths: UserPaths
+	command_options: typeof command_options
 }
 
-const { positionals } = parseArgs({
+const { positionals, values: command_options } = parseArgs({
 	args: argv,
+	options: {
+		force: {
+			type: 'boolean',
+		},
+	},
 	strict: true,
 	allowPositionals: true,
 })
@@ -66,6 +72,7 @@ const procedure_options: ProcedureOptions = {
 	repo_dir: 'tezos',
 	tezos_network,
 	user_paths: await create_user_paths(),
+	command_options,
 }
 
 const procedures = command_procedures.get(command)
