@@ -137,6 +137,29 @@ const make_build_deps: Procedure<ProcedureOptions> = {
 }
 
 const make_binaries: Procedure<ProcedureOptions> = {
+	async can_skip(options) {
+		const repo_path = path.join(options.user_paths.data, options.repo_dir)
+		const built_octez_binaries = await get_files({
+			dir: repo_path,
+			prefix: 'octez-',
+		})
+
+		if (built_octez_binaries.size < 15) {
+			return false
+		}
+
+		const bin_version_stdouts = await get_binary_version_stdouts({
+			built_octez_binaries,
+		})
+
+		const bin_versions = bin_version_stdouts.map(get_binary_version)
+
+		return bin_versions.every(
+			({ version, commit_hash }) =>
+				(version && options.tezos_network.git_ref.endsWith(version)) ||
+				options.tezos_network.git_ref === commit_hash,
+		)
+	},
 	id: Symbol('make'),
 	run: async options => {
 		const repo_path = path.join(options.user_paths.data, options.repo_dir)
