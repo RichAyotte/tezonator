@@ -186,10 +186,18 @@ const install_binaries: Procedure<ProcedureOptions> = {
 			options.tezos_network.git_ref,
 		)
 
+		if (!fs.existsSync(target_path)) {
+			return false
+		}
+
 		const built_octez_binaries = await get_files({
 			prefix: 'octez-',
 			dir: target_path,
 		})
+
+		if (built_octez_binaries.size < 15) {
+			return false
+		}
 
 		const bin_version_stdouts = await get_binary_version_stdouts({
 			built_octez_binaries,
