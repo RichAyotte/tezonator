@@ -226,13 +226,14 @@ const install_binaries: Procedure<ProcedureOptions> = {
 
 		await mkdir(target_path, { recursive: true })
 
-		for (const binary of binaries) {
-			const move_result = await $`mv ${binary} ${target_path}`
-				.cwd(repo_path)
-				.quiet()
-			if (move_result.exitCode !== 0) {
-				throw new Error(move_result.stderr.toString())
-			}
+		const move_result = await $`mv ${[...binaries].map(
+			({ name }) => name,
+		)} ${target_path}`
+			.cwd(repo_path)
+			.quiet()
+
+		if (move_result.exitCode !== 0) {
+			throw new Error(move_result.stderr.toString())
 		}
 	},
 	dependencies: [make_binaries],
