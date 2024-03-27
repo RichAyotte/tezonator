@@ -1,4 +1,5 @@
-import { oraPromise } from 'ora'
+import { green, red } from 'colorette'
+import ora, { oraPromise } from 'ora'
 import type { Procedure } from '~/procedures/types'
 
 type RunProceduresInput<T> = {
@@ -12,7 +13,10 @@ export async function run_procedures<T>({
 }: RunProceduresInput<T>) {
 	for (const procedure of procedures) {
 		if (typeof procedure.can_skip === 'function') {
+			const spinner = ora(`can skip ${procedure.id.description}?`).start()
 			const can_skip = await procedure?.can_skip(procedure_options)
+			spinner.suffixText = can_skip ? green('yes') : red('no')
+			spinner.info()
 			if (can_skip) {
 				continue
 			}
@@ -26,7 +30,7 @@ export async function run_procedures<T>({
 		try {
 			await oraPromise(
 				procedure.run(procedure_options),
-				procedure.id.description,
+				`running ${procedure.id.description}`,
 			)
 		} catch (error) {
 			if (error instanceof Error) {
