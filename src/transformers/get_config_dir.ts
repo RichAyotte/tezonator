@@ -3,7 +3,7 @@ import type { ProcedureOptions } from '~/tezonator'
 
 type GetConfigDirInput = {
 	procedure_options: ProcedureOptions
-	type: 'client' | 'node'
+	type: 'client' | 'node' | 'dal'
 }
 
 export function get_config_dir({

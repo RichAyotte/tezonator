@@ -122,6 +122,50 @@ const init_node: Procedure<ProcedureOptions> = {
 	},
 }
 
+const init_dal: Procedure<ProcedureOptions> = {
+	async can_skip(options) {
+		if (options.command_options.force === true) {
+			return false
+		}
+
+		const dal_data_dir = get_config_dir({
+			procedure_options: options,
+			type: 'dal',
+		})
+
+		return fs.existsSync(path.join(dal_data_dir, 'config.json'))
+	},
+	id: Symbol('init octez dal'),
+	run: async options => {
+		const dal_data_dir = get_config_dir({
+			procedure_options: options,
+			type: 'dal',
+		})
+
+		const bin_dir = path.join(
+			options.user_paths.bin,
+			options.tezos_network.git_ref,
+		)
+
+		await mkdir(dal_data_dir, { recursive: true })
+
+		if (fs.existsSync(path.join(dal_data_dir, 'config.json'))) {
+			await $`mv config.json config-${Date.now()}.json`
+				.cwd(dal_data_dir)
+				.quiet()
+		}
+
+		const output = await $`${path.join(
+			bin_dir,
+			'octez-dal-node',
+		)} config init --data-dir ${dal_data_dir}`.quiet()
+
+		if (output.exitCode !== 0) {
+			throw new Error(output.stderr.toString())
+		}
+	},
+}
+
 const generate_identity: Procedure<ProcedureOptions> = {
 	async can_skip(options) {
 		if (options.command_options.force === true) {
@@ -165,5 +209,6 @@ const generate_identity: Procedure<ProcedureOptions> = {
 export const init_procedures: Procedure<ProcedureOptions>[] = [
 	init_client,
 	init_node,
+	init_dal,
 	generate_identity,
 ]

@@ -251,6 +251,14 @@ const create_service_files: Procedure<ProcedureOptions> = {
 			procedure_options: options,
 			type: 'node',
 		})
+		const dal_data_dir = get_config_dir({
+			procedure_options: options,
+			type: 'dal',
+		})
+		const client_data_dir = get_config_dir({
+			procedure_options: options,
+			type: 'client',
+		})
 		const config_file_path = path.join(node_data_dir, 'config.json')
 
 		const bin_dir = path.join(
@@ -258,7 +266,7 @@ const create_service_files: Procedure<ProcedureOptions> = {
 			options.tezos_network.git_ref,
 		)
 
-		const service_names: ServiceName[] = ['node', 'baker', 'accuser']
+		const service_names: ServiceName[] = ['node', 'baker', 'accuser', 'dal']
 
 		const service_file_names = service_names.map(
 			service_name =>
@@ -269,19 +277,21 @@ const create_service_files: Procedure<ProcedureOptions> = {
 			octez_node_service_filename,
 			octez_baker_service_filename,
 			octez_accuser_service_filename,
+			octez_dal_service_filename,
 		] = service_file_names
 
-		const [node_service, baker_service, accuser_service] = await Promise.all(
-			service_names.map(async service_name => {
-				const service = ini.parse(await get_service_file({ service_name }))
-				if (validate_systemd_service(service)) {
-					return service
-				}
-				console.error(validate_systemd_service.errors)
-			}),
-		)
+		const [node_service, baker_service, accuser_service, dal_service] =
+			await Promise.all(
+				service_names.map(async service_name => {
+					const service = ini.parse(await get_service_file({ service_name }))
+					if (validate_systemd_service(service)) {
+						return service
+					}
+					console.error(validate_systemd_service.errors)
+				}),
+			)
 
-		if (!(node_service && baker_service && accuser_service)) {
+		if (!(node_service && baker_service && accuser_service && dal_service)) {
 			throw new Error('invalid service files')
 		}
 
@@ -289,14 +299,27 @@ const create_service_files: Procedure<ProcedureOptions> = {
 		node_service.Service.ExecStart = [
 			path.join(bin_dir, 'octez-node'),
 			'run',
-			['--config-file', config_file_path].join('='),
+			['--data-dir', node_data_dir].join(' '),
 		]
 			.join(' ')
 			.trim()
 		node_service.Install.RequiredBy = [
 			octez_baker_service_filename,
 			octez_accuser_service_filename,
+			octez_dal_service_filename,
 		].join(' ')
+
+		dal_service.Unit.Description = `Octez DAL - ${options.tezos_network.human_name}`
+		dal_service.Service.ExecStart = [
+			path.join(bin_dir, 'octez-dal-node'),
+			'run',
+			['--data-dir', dal_data_dir].join(' '),
+		]
+			.join(' ')
+			.trim()
+		dal_service.Unit.After = octez_node_service_filename
+		dal_service.Unit.BindsTo = octez_node_service_filename
+		dal_service.Install.WantedBy = octez_node_service_filename
 
 		baker_service.Unit.Description = `Octez Baker - ${options.tezos_network.human_name}`
 		baker_service.Service.ExecStart = [
@@ -305,13 +328,22 @@ const create_service_files: Procedure<ProcedureOptions> = {
 				`octez-baker-${options.tezos_network.last_baking_daemon}`,
 			),
 			'run',
-			['--config-file', config_file_path].join('='),
+			['--base-dir', client_data_dir].join(' '),
 		]
 			.join(' ')
 			.trim()
-		baker_service.Unit.After = octez_node_service_filename
-		baker_service.Unit.BindsTo = octez_node_service_filename
-		baker_service.Install.WantedBy = octez_node_service_filename
+		baker_service.Unit.After = [
+			octez_node_service_filename,
+			octez_dal_service_filename,
+		].join(' ')
+		baker_service.Unit.BindsTo = [
+			octez_node_service_filename,
+			octez_dal_service_filename,
+		].join(' ')
+		baker_service.Install.WantedBy = [
+			octez_node_service_filename,
+			octez_dal_service_filename,
+		].join(' ')
 
 		accuser_service.Unit.Description = `Octez Accuser - ${options.tezos_network.human_name}`
 		accuser_service.Service.ExecStart = [
@@ -341,6 +373,10 @@ const create_service_files: Procedure<ProcedureOptions> = {
 			write(
 				path.join(options.user_paths.systemd, octez_accuser_service_filename),
 				ini.stringify(accuser_service, {}),
+			),
+			write(
+				path.join(options.user_paths.systemd, octez_dal_service_filename),
+				ini.stringify(dal_service, {}),
 			),
 		])
 

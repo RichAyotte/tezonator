@@ -1,7 +1,7 @@
 import path from 'node:path'
 import { file } from 'bun'
 
-export type ServiceName = 'node' | 'baker' | 'accuser'
+export type ServiceName = 'node' | 'baker' | 'accuser' | 'dal'
 export type GetServiceFileInput = { service_name: ServiceName }
 
 export async function get_service_file({
