@@ -74,6 +74,10 @@ const init_node: Procedure<ProcedureOptions> = {
 			options.tezos_network.git_ref,
 		)
 
+		if (!fs.existsSync(path.join(node_data_dir, 'config.json'))) {
+			return false
+		}
+
 		const output = await $`${path.join(
 			bin_dir,
 			'octez-node',
