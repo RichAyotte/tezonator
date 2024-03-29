@@ -1,10 +1,14 @@
 import fs from 'node:fs'
 import { mkdir } from 'node:fs/promises'
 import path from 'node:path'
-import { $ } from 'bun'
+import { $, file, write } from 'bun'
+import { network_octez_binary_configs } from '~/data/network_octez_binary_config'
+import type { OctezBinary } from '~/data/octez_binaries'
+import { validate_octez_node_config } from '~/flow/validators/octez_node_config'
 import type { Procedure } from '~/procedures/types'
 import type { ProcedureOptions } from '~/tezonator'
 import { get_config_dir } from '~/transformers/get_config_dir'
+import { get_tezos_network_name } from '~/transformers/get_tezos_network_name'
 
 const init_client: Procedure<ProcedureOptions> = {
 	async can_skip(options) {
@@ -74,19 +78,19 @@ const init_node: Procedure<ProcedureOptions> = {
 			options.tezos_network.git_ref,
 		)
 
-		if (!fs.existsSync(path.join(node_data_dir, 'config.json'))) {
+		const config_file_path = path.join(node_data_dir, 'config.json')
+		if (!fs.existsSync(config_file_path)) {
 			return false
 		}
 
-		const output = await $`${path.join(
-			bin_dir,
-			'octez-node',
-		)} config show --data-dir ${node_data_dir}`.quiet()
+		const config_string = file(config_file_path)
+		const config = await config_string.json()
 
-		return output.exitCode === 0
+		return validate_octez_node_config(config)
 	},
 	id: Symbol('init octez node'),
 	run: async options => {
+		const bin: OctezBinary = 'octez-node'
 		const node_data_dir = get_config_dir({
 			procedure_options: options,
 			type: 'node',
@@ -123,6 +127,35 @@ const init_node: Procedure<ProcedureOptions> = {
 		if (output.exitCode !== 0) {
 			throw new Error(output.stderr.toString())
 		}
+
+		const config_file_path = path.join(node_data_dir, 'config.json')
+		const config_file = file(config_file_path)
+		const config = await config_file.json()
+
+		if (!validate_octez_node_config(config)) {
+			throw new Error('Octez node config file is invalid')
+		}
+
+		const tezos_network_name = get_tezos_network_name({
+			tezos_network: options.tezos_network,
+		})
+
+		const network_configs = network_octez_binary_configs.get(tezos_network_name)
+		if (!network_configs) {
+			await write(config_file, JSON.stringify(config, null, '\t'))
+			return
+		}
+
+		const octez_node_config_override = network_configs.get(bin)
+		if (!octez_node_config_override) {
+			await write(config_file, JSON.stringify(config, null, '\t'))
+			return
+		}
+
+		await write(
+			config_file,
+			JSON.stringify({ ...config, ...octez_node_config_override }, null, '\t'),
+		)
 	},
 }
 
@@ -141,6 +174,7 @@ const init_dal: Procedure<ProcedureOptions> = {
 	},
 	id: Symbol('init octez dal'),
 	run: async options => {
+		const bin: OctezBinary = 'octez-dal-node'
 		const dal_data_dir = get_config_dir({
 			procedure_options: options,
 			type: 'dal',
@@ -167,6 +201,31 @@ const init_dal: Procedure<ProcedureOptions> = {
 		if (output.exitCode !== 0) {
 			throw new Error(output.stderr.toString())
 		}
+
+		const config_file_path = path.join(dal_data_dir, 'config.json')
+		const config_file = file(config_file_path)
+		const config = await config_file.json()
+
+		const tezos_network_name = get_tezos_network_name({
+			tezos_network: options.tezos_network,
+		})
+
+		const network_configs = network_octez_binary_configs.get(tezos_network_name)
+		if (!network_configs) {
+			await write(config_file, JSON.stringify(config, null, '\t'))
+			return
+		}
+
+		const octez_dal_config_override = network_configs.get(bin)
+		if (!octez_dal_config_override) {
+			await write(config_file, JSON.stringify(config, null, '\t'))
+			return
+		}
+
+		await write(
+			config_file,
+			JSON.stringify({ ...config, ...octez_dal_config_override }, null, '\t'),
+		)
 	},
 }
 
