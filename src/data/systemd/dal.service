@@ -1,0 +1,15 @@
+[Unit]
+After =
+BindsTo =
+Description = Octez DAL
+Documentation = https://tezos.gitlab.io/shell/cli-commands.html#dal-node-manual-experimental
+
+[Service]
+ExecStart =
+ExecStartPre = /bin/sleep 15
+Restart = on-failure
+RestartSec = 60
+TimeoutStopSec = 15min
+
+[Install]
+WantedBy =
