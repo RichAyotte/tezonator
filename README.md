@@ -32,3 +32,9 @@ bun src/tezonator.ts build mainnet
 ```bash
 bun src/tezonator.ts init mainnet
 ```
+
+### Start
+
+```bash
+bun src/tezonator.ts start mainnet
+```
