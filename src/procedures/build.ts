@@ -13,7 +13,9 @@ import type { ProcedureOptions } from '~/tezonator'
 import { get_binary_version } from '~/transformers/get_binary_version'
 import { get_config_dir } from '~/transformers/get_config_dir'
 import { get_filtered_obj } from '~/transformers/get_filtered_object'
+import { get_service_file_name } from '~/transformers/get_service_file_name'
 import { get_sexp_object } from '~/transformers/get_sexp_object'
+import { get_tezos_network_name } from '~/transformers/get_tezos_network_name'
 
 const clone_repo: Procedure<ProcedureOptions> = {
 	async can_skip(options) {
@@ -268,10 +270,12 @@ const create_service_files: Procedure<ProcedureOptions> = {
 
 		const service_names: ServiceName[] = ['node', 'baker', 'accuser', 'dal']
 
-		const service_file_names = service_names.map(
-			service_name =>
-				`octez-${service_name}-${options.tezos_network.human_name.toLowerCase()}.service`,
-		)
+		const service_file_names = service_names.map(service_name => {
+			return get_service_file_name({
+				tezos_network: options.tezos_network,
+				service_name,
+			})
+		})
 
 		const [
 			octez_node_service_filename,
