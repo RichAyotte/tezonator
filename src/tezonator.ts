@@ -12,18 +12,9 @@ import {
 } from '~/data/tezonator_commands'
 import { is_item_in_set } from '~/flow/is_item_in_set'
 import { run_procedures } from '~/flow/run_procedures'
-import type { TezosNetwork } from '~/flow/validators/tezos_networks'
-import type { UserPaths } from '~/procedures/create_user_paths'
 import { create_user_paths } from '~/procedures/create_user_paths'
 import { get_tezos_network } from '~/transformers/get_tezos_network'
-
-export type ProcedureOptions = {
-	git_url: string
-	repo_dir: string
-	tezos_network: TezosNetwork
-	user_paths: UserPaths
-	command_options: typeof command_options
-}
+import type { ProcedureOptions } from '~/procedures/types'
 
 const { positionals, values: command_options } = parseArgs({
 	args: argv,
@@ -37,6 +28,8 @@ const { positionals, values: command_options } = parseArgs({
 })
 
 const [, , command, network_name] = positionals
+
+export { command_options }
 
 if (!is_item_in_set<TezonatorCommand>(command, tezonator_commands)) {
 	throw new Error(
@@ -78,5 +71,5 @@ const procedure_options: ProcedureOptions = {
 const procedures = command_procedures.get(command)
 
 if (procedures) {
-	await run_procedures<ProcedureOptions>({ procedures, procedure_options })
+	await run_procedures({ procedures, procedure_options })
 }

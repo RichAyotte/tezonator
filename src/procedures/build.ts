@@ -9,7 +9,6 @@ import type { ServiceName } from '~/data/systemd/get_service_file'
 import { get_service_file } from '~/data/systemd/get_service_file'
 import { validate_systemd_service } from '~/flow/validators/systemd_service'
 import type { Procedure } from '~/procedures/types'
-import type { ProcedureOptions } from '~/tezonator'
 import { get_binary_version } from '~/transformers/get_binary_version'
 import { get_config_dir } from '~/transformers/get_config_dir'
 import { get_filtered_obj } from '~/transformers/get_filtered_object'
@@ -17,7 +16,7 @@ import { get_service_file_name } from '~/transformers/get_service_file_name'
 import { get_sexp_object } from '~/transformers/get_sexp_object'
 import { get_tezos_network_name } from '~/transformers/get_tezos_network_name'
 
-const clone_repo: Procedure<ProcedureOptions> = {
+const clone_repo: Procedure = {
 	async can_skip(options) {
 		const repo_path = path.join(options.user_paths.data, options.repo_dir)
 
@@ -45,7 +44,7 @@ const clone_repo: Procedure<ProcedureOptions> = {
 	},
 }
 
-const reset_repo: Procedure<ProcedureOptions> = {
+const reset_repo: Procedure = {
 	id: Symbol('reset repo'),
 	run: async options => {
 		const output = await $`git reset --hard`
@@ -58,7 +57,7 @@ const reset_repo: Procedure<ProcedureOptions> = {
 	},
 }
 
-const git_checkout_master: Procedure<ProcedureOptions> = {
+const git_checkout_master: Procedure = {
 	id: Symbol('git checkout master'),
 	run: async options => {
 		const output = await $`git checkout master -q`
@@ -72,7 +71,7 @@ const git_checkout_master: Procedure<ProcedureOptions> = {
 	dependencies: [clone_repo, reset_repo],
 }
 
-const git_pull: Procedure<ProcedureOptions> = {
+const git_pull: Procedure = {
 	id: Symbol('git pull'),
 	run: async options => {
 		const output = await $`git pull -q`
@@ -86,7 +85,7 @@ const git_pull: Procedure<ProcedureOptions> = {
 	dependencies: [git_checkout_master],
 }
 
-const git_checkout_network_commit: Procedure<ProcedureOptions> = {
+const git_checkout_network_commit: Procedure = {
 	id: Symbol('checkout network commit or branch'),
 	run: async options => {
 		const output = await $`git checkout ${options.tezos_network.git_ref}`
@@ -100,7 +99,7 @@ const git_checkout_network_commit: Procedure<ProcedureOptions> = {
 	dependencies: [git_pull],
 }
 
-const patch_repo: Procedure<ProcedureOptions> = {
+const patch_repo: Procedure = {
 	id: Symbol('patch repo'),
 	run: async options => {
 		const patches_dir = path.join(
@@ -129,7 +128,7 @@ const patch_repo: Procedure<ProcedureOptions> = {
 	dependencies: [git_checkout_network_commit, reset_repo],
 }
 
-const make_build_deps: Procedure<ProcedureOptions> = {
+const make_build_deps: Procedure = {
 	id: Symbol('make build-deps'),
 	run: async options => {
 		const output = await $`make build-deps`
@@ -143,7 +142,7 @@ const make_build_deps: Procedure<ProcedureOptions> = {
 	dependencies: [patch_repo],
 }
 
-const make_binaries: Procedure<ProcedureOptions> = {
+const make_binaries: Procedure = {
 	async can_skip(options) {
 		const repo_path = path.join(options.user_paths.data, options.repo_dir)
 		const built_octez_binaries = await get_files({
@@ -186,7 +185,7 @@ const make_binaries: Procedure<ProcedureOptions> = {
 	dependencies: [make_build_deps],
 }
 
-const install_binaries: Procedure<ProcedureOptions> = {
+const install_binaries: Procedure = {
 	async can_skip(options) {
 		const target_path = path.join(
 			options.user_paths.bin,
@@ -246,7 +245,7 @@ const install_binaries: Procedure<ProcedureOptions> = {
 	dependencies: [make_binaries],
 }
 
-const create_service_files: Procedure<ProcedureOptions> = {
+const create_service_files: Procedure = {
 	id: Symbol('create service files'),
 	run: async options => {
 		const node_data_dir = get_config_dir({
@@ -395,6 +394,4 @@ const create_service_files: Procedure<ProcedureOptions> = {
 	dependencies: [install_binaries],
 }
 
-export const build_procedures: Procedure<ProcedureOptions>[] = [
-	create_service_files,
-]
+export const build_procedures: Procedure[] = [create_service_files]

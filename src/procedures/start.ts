@@ -1,9 +1,8 @@
 import { $ } from 'bun'
 import type { Procedure } from '~/procedures/types'
-import type { ProcedureOptions } from '~/tezonator'
 import { get_service_file_name } from '~/transformers/get_service_file_name'
 
-const start_node: Procedure<ProcedureOptions> = {
+const start_node: Procedure = {
 	id: Symbol('start octez node'),
 	run: async options => {
 		const service_file_name = get_service_file_name({
@@ -19,7 +18,7 @@ const start_node: Procedure<ProcedureOptions> = {
 	},
 }
 
-const start_dal: Procedure<ProcedureOptions> = {
+const start_dal: Procedure = {
 	id: Symbol('start octez dal'),
 	run: async options => {
 		const service_file_name = get_service_file_name({
@@ -35,7 +34,4 @@ const start_dal: Procedure<ProcedureOptions> = {
 	},
 }
 
-export const start_procedures: Procedure<ProcedureOptions>[] = [
-	start_node,
-	start_dal,
-]
+export const start_procedures: Procedure[] = [start_node, start_dal]

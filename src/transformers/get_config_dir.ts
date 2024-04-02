@@ -1,5 +1,5 @@
 import path from 'node:path'
-import type { ProcedureOptions } from '~/tezonator'
+import type { ProcedureOptions } from '~/procedures/types'
 
 type GetConfigDirInput = {
 	procedure_options: ProcedureOptions

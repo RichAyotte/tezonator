@@ -6,11 +6,10 @@ import { network_octez_binary_configs } from '~/data/network_octez_binary_config
 import type { OctezBinary } from '~/data/octez_binaries'
 import { validate_octez_node_config } from '~/flow/validators/octez_node_config'
 import type { Procedure } from '~/procedures/types'
-import type { ProcedureOptions } from '~/tezonator'
 import { get_config_dir } from '~/transformers/get_config_dir'
 import { get_tezos_network_name } from '~/transformers/get_tezos_network_name'
 
-const init_client: Procedure<ProcedureOptions> = {
+const init_client: Procedure = {
 	async can_skip(options) {
 		if (options.command_options.force === true) {
 			return false
@@ -62,7 +61,7 @@ const init_client: Procedure<ProcedureOptions> = {
 	},
 }
 
-const init_node: Procedure<ProcedureOptions> = {
+const init_node: Procedure = {
 	async can_skip(options) {
 		if (options.command_options.force === true) {
 			return false
@@ -159,7 +158,7 @@ const init_node: Procedure<ProcedureOptions> = {
 	},
 }
 
-const init_dal: Procedure<ProcedureOptions> = {
+const init_dal: Procedure = {
 	async can_skip(options) {
 		if (options.command_options.force === true) {
 			return false
@@ -229,7 +228,7 @@ const init_dal: Procedure<ProcedureOptions> = {
 	},
 }
 
-const generate_identity: Procedure<ProcedureOptions> = {
+const generate_identity: Procedure = {
 	async can_skip(options) {
 		if (options.command_options.force === true) {
 			return false
@@ -269,7 +268,7 @@ const generate_identity: Procedure<ProcedureOptions> = {
 	},
 }
 
-export const init_procedures: Procedure<ProcedureOptions>[] = [
+export const init_procedures: Procedure[] = [
 	init_client,
 	init_node,
 	init_dal,

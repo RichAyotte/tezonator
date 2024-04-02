@@ -1,16 +1,25 @@
 import { green, red } from 'colorette'
-import ora, { oraPromise } from 'ora'
-import type { Procedure } from '~/procedures/types'
+import ora from 'ora'
+import type { Procedure, ProcedureOptions } from '~/procedures/types'
+import progress_estimator from 'progress-estimator'
+import path from 'node:path'
 
-type RunProceduresInput<T> = {
-	procedures: Procedure<T>[]
-	procedure_options: T
+type RunProceduresInput = {
+	procedures: Procedure[]
+	procedure_options: ProcedureOptions
 }
 
-export async function run_procedures<T>({
+export async function run_procedures({
 	procedures,
 	procedure_options,
-}: RunProceduresInput<T>) {
+}: RunProceduresInput) {
+	const log_estimate = progress_estimator({
+		storagePath: path.join(
+			procedure_options.user_paths.config,
+			'progress-estimator',
+		),
+	})
+
 	for (const procedure of procedures) {
 		if (typeof procedure.can_skip === 'function') {
 			const spinner = ora(`can skip ${procedure.id.description}?`).start()
@@ -28,7 +37,7 @@ export async function run_procedures<T>({
 			})
 		}
 		try {
-			await oraPromise(
+			await log_estimate(
 				procedure.run(procedure_options),
 				`running ${procedure.id.description}`,
 			)
