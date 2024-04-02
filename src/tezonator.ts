@@ -13,8 +13,8 @@ import {
 import { is_item_in_set } from '~/flow/is_item_in_set'
 import { run_procedures } from '~/flow/run_procedures'
 import { create_user_paths } from '~/procedures/create_user_paths'
-import { get_tezos_network } from '~/transformers/get_tezos_network'
 import type { ProcedureOptions } from '~/procedures/types'
+import { get_tezos_network } from '~/transformers/get_tezos_network'
 
 const { positionals, values: command_options } = parseArgs({
 	args: argv,

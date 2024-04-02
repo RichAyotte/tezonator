@@ -1,8 +1,8 @@
+import path from 'node:path'
 import { green, red } from 'colorette'
 import ora from 'ora'
-import type { Procedure, ProcedureOptions } from '~/procedures/types'
 import progress_estimator from 'progress-estimator'
-import path from 'node:path'
+import type { Procedure, ProcedureOptions } from '~/procedures/types'
 
 type RunProceduresInput = {
 	procedures: Procedure[]
