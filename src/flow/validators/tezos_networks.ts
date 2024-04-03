@@ -78,8 +78,7 @@ export const tezos_networks_schema = {
 	$schema: 'http://json-schema.org/draft-07/schema#',
 	type: 'object',
 	patternProperties: {
-		'^(dailynet|weeklynet)-\\d{4}-\\d{2}-\\d{2}$|^ghostnet$|^mainnet$|^oxfordnet$|^predalnet$':
-			tezos_network_schema,
+		'^weeklynet-\\d{4}-\\d{2}-\\d{2}$|^[A-Za-z]+net$': tezos_network_schema,
 	},
 	additionalProperties: false,
 } as const satisfies JSONSchema
