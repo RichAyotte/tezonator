@@ -13,11 +13,11 @@ bun src/tezonator.ts [command] [network]
 
 ### Networks currently supported
 
-- dailynet
 - ghostnet
 - mainnet
 - oxfordnet
-- parisnet
+- parisanet
+- parisbnet
 - predalnet
 - weeklynet
 
