@@ -1,15 +1,16 @@
 import { parseArgs } from 'node:util'
 import { argv } from 'bun'
 import { command_procedures } from '~/data/command_procedures'
+import { get_command_line_help } from '~/data/get_command_line_help'
 import { get_tezos_networks } from '~/data/get_tezos_netwoks'
 import {
 	type TezosNetworkName,
 	tezos_network_names,
 } from '~/data/network_names'
 import {
-	type TezonatorCommand,
-	tezonator_commands,
-} from '~/data/tezonator_commands'
+	type TezonatorCommandName,
+	tezonator_command_names,
+} from '~/data/tezonator_command_names'
 import { is_item_in_set } from '~/flow/is_item_in_set'
 import { run_procedures } from '~/flow/run_procedures'
 import { create_user_paths } from '~/procedures/create_user_paths'
@@ -31,11 +32,16 @@ const [, , command, network_name] = positionals
 
 export { command_options }
 
-if (!is_item_in_set<TezonatorCommand>(command, tezonator_commands)) {
+if (!command) {
+	console.log(get_command_line_help())
+	process.exit()
+}
+
+if (!is_item_in_set<TezonatorCommandName>(command, tezonator_command_names)) {
 	throw new Error(
-		`invalid command. Command must be one of ${[...tezonator_commands].join(
-			', ',
-		)} `,
+		`invalid command. Command must be one of ${[
+			...tezonator_command_names,
+		].join(', ')} `,
 	)
 }
 
@@ -68,8 +74,16 @@ const procedure_options: ProcedureOptions = {
 	command_options,
 }
 
-const procedures = command_procedures.get(command)
+const tezonator_command = command_procedures.get(command)
 
-if (procedures) {
-	await run_procedures({ procedures, procedure_options })
+if (!tezonator_command) {
+	console.error(`No procedures found for commmand ${command}`)
+	process.exit(1)
+}
+
+if (tezonator_command.procedures) {
+	await run_procedures({
+		procedures: tezonator_command.procedures,
+		procedure_options,
+	})
 }

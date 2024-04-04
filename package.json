@@ -5,6 +5,7 @@
     "ajv": "^8.12.0",
     "ajv-formats": "^3.0.1",
     "colorette": "^2.0.20",
+    "columnify": "^1.6.0",
     "ora": "^8.0.1",
     "progress-estimator": "^0.3.1"
   },
@@ -13,6 +14,7 @@
     "@total-typescript/ts-reset": "^0.5.1",
     "@types/ajv": "^1.0.0",
     "@types/bun": "latest",
+    "@types/columnify": "^1.5.4",
     "@types/node": "^20.12.3",
     "json-schema-to-ts": "^3.0.1",
     "tsc-alias": "^1.8.8"
