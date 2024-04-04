@@ -41,6 +41,7 @@
 				"noNewSymbol": "error",
 				"noUndeclaredVariables": "error",
 				"noUnusedImports": "error",
+				"noUnusedVariables": "error",
 				"useHookAtTopLevel": "error"
 			},
 			"nursery": {
