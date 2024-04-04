@@ -14,7 +14,6 @@ import { get_config_dir } from '~/transformers/get_config_dir'
 import { get_filtered_obj } from '~/transformers/get_filtered_object'
 import { get_service_file_name } from '~/transformers/get_service_file_name'
 import { get_sexp_object } from '~/transformers/get_sexp_object'
-import { get_tezos_network_name } from '~/transformers/get_tezos_network_name'
 
 const clone_repo: Procedure = {
 	async can_skip(options) {
