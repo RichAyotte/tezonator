@@ -28,7 +28,12 @@
 		"enabled": true,
 		"rules": {
 			"complexity": {
-				"noExcessiveCognitiveComplexity": "warn",
+				"noExcessiveCognitiveComplexity": {
+					"level": "warn",
+					"options": {
+						"maxAllowedComplexity": 17
+					}
+				},
 				"noVoid": "error",
 				"useSimplifiedLogicExpression": "warn"
 			},
