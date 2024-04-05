@@ -1,5 +1,7 @@
 # tezonator
 
+[![Tests](https://github.com/RichAyotte/tezonator/actions/workflows/test.yml/badge.svg)](https://github.com/RichAyotte/tezonator/actions/workflows/test.yml)
+
 To install dependencies:
 
 ```bash
