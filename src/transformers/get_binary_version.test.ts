@@ -26,4 +26,12 @@ describe('get_binary_version', () => {
 			}),
 		).toMatchSnapshot()
 	})
+	test('(Octez 20.0~beta2)', () => {
+		expect(
+			get_binary_version({
+				bin_path,
+				stdout: 'c8e95f06 (2024-04-02 18:21:31 +0200) (Octez 20.0~beta2)\n',
+			}),
+		).toMatchSnapshot()
+	})
 })

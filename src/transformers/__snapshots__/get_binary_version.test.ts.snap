@@ -29,3 +29,18 @@ exports[`get_binary_version (18.0~rc1+dev) 1`] = `
   "version": "18.0~rc1+dev",
 }
 `;
+
+exports[`get_binary_version (Octez 20.0~beta2) 1`] = `
+{
+  "bin_path": {
+    "base": "octez-client",
+    "dir": "/home/rich/.local/bin/tezonator/0a81ce76",
+    "ext": "",
+    "name": "octez-client",
+    "root": "/",
+  },
+  "commit_hash": "c8e95f06",
+  "date": 2024-04-02T16:21:31.000Z,
+  "version": "Octez 20.0~beta2",
+}
+`;

@@ -15,7 +15,7 @@
     "@types/ajv": "^1.0.0",
     "@types/bun": "latest",
     "@types/columnify": "^1.5.4",
-    "@types/node": "^20.12.3",
+    "@types/node": "^20.12.4",
     "json-schema-to-ts": "^3.0.1",
     "tsc-alias": "^1.8.8"
   },

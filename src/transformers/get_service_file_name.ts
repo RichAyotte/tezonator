@@ -1,4 +1,4 @@
-import type { ServiceName } from '~/data/systemd/get_service_file'
+import type { ServiceName } from '~/data/service_names'
 import type { TezosNetwork } from '~/flow/validators/tezos_networks'
 import { get_tezos_network_name } from '~/transformers/get_tezos_network_name'
 

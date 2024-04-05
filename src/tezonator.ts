@@ -1,7 +1,10 @@
+import path from 'node:path'
 import { parseArgs } from 'node:util'
 import { argv } from 'bun'
 import { command_procedures } from '~/data/command_procedures'
+import { git_url, repo_dir_name } from '~/data/constants'
 import { get_command_line_help } from '~/data/get_command_line_help'
+import { get_commit_hash } from '~/data/get_commit_hash'
 import { get_tezos_networks } from '~/data/get_tezos_netwoks'
 import {
 	type TezosNetworkName,
@@ -14,7 +17,7 @@ import {
 import { is_item_in_set } from '~/flow/is_item_in_set'
 import { run_procedures } from '~/flow/run_procedures'
 import { create_user_paths } from '~/procedures/create_user_paths'
-import type { ProcedureOptions } from '~/procedures/types'
+import { get_procedure_input } from '~/transformers/get_procedure_input'
 import { get_tezos_network } from '~/transformers/get_tezos_network'
 
 const { positionals, values: command_options } = parseArgs({
@@ -31,6 +34,7 @@ const { positionals, values: command_options } = parseArgs({
 const [, , command, network_name] = positionals
 
 export { command_options }
+export type CommandOptions = typeof command_options
 
 if (!command) {
 	console.log(get_command_line_help())
@@ -66,13 +70,20 @@ if (!tezos_network) {
 	)
 }
 
-const procedure_options: ProcedureOptions = {
-	git_url: 'https://gitlab.com/tezos/tezos.git',
-	repo_dir: 'tezos',
-	tezos_network,
-	user_paths: await create_user_paths(),
+const user_paths = await create_user_paths()
+const network_commit_hash = await get_commit_hash({
+	repo_path: path.join(user_paths.data, repo_dir_name),
+	tag: tezos_network.git_ref,
+})
+
+const procedure_input = get_procedure_input({
 	command_options,
-}
+	network_commit_hash,
+	git_url,
+	repo_dir_name,
+	tezos_network,
+	user_paths,
+})
 
 const tezonator_command = command_procedures.get(command)
 
@@ -84,6 +95,6 @@ if (!tezonator_command) {
 if (tezonator_command.procedures) {
 	await run_procedures({
 		procedures: tezonator_command.procedures,
-		procedure_options,
+		procedure_input,
 	})
 }
