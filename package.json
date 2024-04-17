@@ -20,15 +20,15 @@
   },
   "description": "Tezonator - A utility for building and managing Octez binaries for Tezos.",
   "devDependencies": {
-    "@biomejs/biome": "1.6.4",
+    "@biomejs/biome": "1.7.0",
     "@total-typescript/ts-reset": "^0.5.1",
     "@types/ajv": "^1.0.0",
     "@types/bun": "latest",
     "@types/columnify": "^1.5.4",
-    "@types/node": "^20.12.5",
+    "@types/node": "^20.12.7",
     "json-schema-to-ts": "^3.0.1",
     "tsc-alias": "^1.8.8",
-    "typescript": "^5.4.4"
+    "typescript": "^5.4.5"
   },
   "engines": {
     "bun": ">=1.1.2"
